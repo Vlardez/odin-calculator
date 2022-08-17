@@ -61,3 +61,7 @@ button {
 button:hover {
   background-color: green;
 }
+
+button:active {
+  background-color: brown;
+}
