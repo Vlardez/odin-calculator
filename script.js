@@ -42,6 +42,6 @@ function operate(op,a,b) {
     }
 }
 function disp(num) {
-    dispVal += num;
-    display.textContent = dispVal;
+    display.textContent += num;
+    dispVal = parseInt(display.textContent);
 }
