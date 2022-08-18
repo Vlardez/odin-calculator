@@ -8,6 +8,7 @@ let dispVal;
 let deciBtn = document.querySelector('#decibtn');
 let opBtns = document.querySelectorAll('.opbtn');
 let eqBtn = document.querySelector('#equalbtn');
+let zeroBtn = document.querySelector('#btn0');
 const opQueue = {
     queue: false,
     op: ""
@@ -17,6 +18,7 @@ const opQueue = {
 clearBtn.addEventListener('click', e => {
     display.textContent = "";
     dispVal = null;
+    clrQueue();
 })
 numBtns.forEach(numBtn => {
     numBtn.addEventListener('click', e => {
@@ -24,7 +26,12 @@ numBtns.forEach(numBtn => {
     })
 })
 deciBtn.addEventListener('click',e => {
-    if (display.textContent !== "" && display.textContent.search(/./) === -1) {
+    if (display.textContent !== "" && display.textContent.search('.') === -1) {
+        disp(e.currentTarget.value);
+    }
+})
+zeroBtn.addEventListener('click', e => {
+    if (display.textContent === "" || display.textContent.search([1-9]) !== -1) {
         disp(e.currentTarget.value);
     }
 })
@@ -50,8 +57,7 @@ eqBtn.addEventListener('click', e => {
         dispVal = operate(opQueue.op,firstNum,nextNum);
         display.textContent = dispVal;
         firstNum = dispVal
-        opQueue.queue = false;
-        opQueue.op = "";
+        clrQueue();
     }
 })
 
@@ -84,4 +90,8 @@ function operate(op,a,b) {
 function disp(num) {
     display.textContent += num;
     dispVal = parseFloat(display.textContent);
+}
+function clrQueue() {
+    opQueue.queue = false;
+    opQueue.op = "";
 }
