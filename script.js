@@ -2,60 +2,68 @@
 let firstNum;
 let nextNum;
 let clearBtn = document.querySelector('#clearbtn');
-let display = document.querySelector('#display');
+let mainDisplay = document.querySelector('#maindisplay');
+let subDisplay = document.querySelector('#smdisplay');
 let numBtns = document.querySelectorAll('.numbtn');
 let dispVal;
 let deciBtn = document.querySelector('#decibtn');
 let opBtns = document.querySelectorAll('.opbtn');
 let eqBtn = document.querySelector('#equalbtn');
 let zeroBtn = document.querySelector('#btn0');
-const opQueue = {
+const opStates = {
     queue: false,
-    op: ""
+    op: "",
+    doubleEqual: false
 };
 
 //adding onclicks to various buttons
 clearBtn.addEventListener('click', e => {
-    display.textContent = "";
+    mainDisplay.textContent = "";
+    subDisplay.textContent = "";
     dispVal = null;
     clrQueue();
 })
 numBtns.forEach(numBtn => {
     numBtn.addEventListener('click', e => {
-        disp(e.currentTarget.value);
+        if (mainDisplay.textContent === "0") {
+            mainDisplay.textContent = "";
+            disp(e.currentTarget.value);
+        } else {
+            disp(e.currentTarget.value);
+        }
     })
 })
 deciBtn.addEventListener('click',e => {
-    if (display.textContent !== "" && display.textContent.search('.') === -1) {
+    if (mainDisplay.textContent !== "" && mainDisplay.textContent.search(/\./) === -1) {
         disp(e.currentTarget.value);
     }
 })
 zeroBtn.addEventListener('click', e => {
-    if (display.textContent === "" || display.textContent.search([1-9]) !== -1) {
+    if (mainDisplay.textContent === "" || mainDisplay.textContent.search(/[1-9]/) !== -1) {
         disp(e.currentTarget.value);
     }
 })
 opBtns.forEach(opBtn => {
     opBtn.addEventListener('click', e => {
-            if (!opQueue.queue) {
+            if (!opStates.queue) {
                 firstNum = dispVal;
                 dispVal = null;
-                display.textContent = "";
-                opQueue.queue = true;
-                opQueue.op = e.currentTarget.value;
+                mainDisplay.textContent = "";
+                opStates.queue = true;
+                opStates.op = e.currentTarget.value;
             } else {
                 nextNum = dispVal;
-                dispVal = operate(opQueue.op,firstNum,nextNum);
-                display.textContent = dispVal;
+                dispVal = operate(opStates.op,firstNum,nextNum);
+                mainDisplay.textContent = dispVal;
                 firstNum = dispVal;
             }
     })
 })
 eqBtn.addEventListener('click', e => {
-    if (opQueue.queue) {
+    if (opStates.queue) {
         nextNum = dispVal;
-        dispVal = operate(opQueue.op,firstNum,nextNum);
-        display.textContent = dispVal;
+        dispVal = operate(opStates.op,firstNum,nextNum);
+        mainDisplay.textContent = dispVal;
         firstNum = dispVal
         clrQueue();
     }
@@ -88,10 +96,10 @@ function operate(op,a,b) {
     }
 }
 function disp(num) {
-    display.textContent += num;
-    dispVal = parseFloat(display.textContent);
+    mainDisplay.textContent += num;
+    dispVal = parseFloat(mainDisplay.textContent);
 }
 function clrQueue() {
-    opQueue.queue = false;
-    opQueue.op = "";
+    opStates.queue = false;
+    opStates.op = "";
 }
