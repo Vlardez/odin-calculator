@@ -10,6 +10,8 @@ let deciBtn = document.querySelector('#decibtn');
 let opBtns = document.querySelectorAll('.opbtn');
 let eqBtn = document.querySelector('#equalbtn');
 let zeroBtn = document.querySelector('#btn0');
+let negBtn = document.querySelector('#negbtn');
+let percBtn = document.querySelector('#percbtn');
 const opStates = {
     queue: false,
     op: "",
@@ -23,6 +25,14 @@ clearBtn.addEventListener('click', e => {
     subDisplay.textContent = "";
     dispVal = null;
     clrQueue();
+})
+negBtn.addEventListener('click', e => {
+    dispVal = -dispVal;
+    mainDisplay.textContent = dispVal;
+})
+percBtn.addEventListener('click', e => {
+    dispVal = dispVal/100;
+    mainDisplay.textContent = dispVal;
 })
 numBtns.forEach(numBtn => {
     numBtn.addEventListener('click', e => {
@@ -43,7 +53,6 @@ zeroBtn.addEventListener('click', e => {
         disp(e.currentTarget.value);
     }
 })
-// finish figuring out the clear disp when doing new operation
 opBtns.forEach(opBtn => {
     opBtn.addEventListener('click', e => {
         if (opStates.clrsub) {
@@ -64,7 +73,6 @@ opBtns.forEach(opBtn => {
         }
     })
 })
-// equals button messes up clear disp for some reason. 
 eqBtn.addEventListener('click', e => {
     if (opStates.queue) {
         subDisplay.textContent += (" " + dispVal);
@@ -100,18 +108,17 @@ function operate(op,a,b) {
                     return divide(a,b);
                 }
             }
-            function disp(num) {
-                mainDisplay.textContent += num;
-                dispVal = parseFloat(mainDisplay.textContent);
-            }
-            function clrQueue() {
-                opStates.queue = false;
-                opStates.op = "";
-            }
-            
-            function calc() {
-                nextNum = dispVal;
-                dispVal = operate(opStates.op,firstNum,nextNum);
-                mainDisplay.textContent = dispVal;
-                firstNum = dispVal
-            }
+function disp(num) {
+    mainDisplay.textContent += num;
+    dispVal = parseFloat(mainDisplay.textContent);
+}
+function clrQueue() {
+    opStates.queue = false;
+    opStates.op = "";
+}
+function calc() {
+    nextNum = dispVal;
+    dispVal = operate(opStates.op,firstNum,nextNum);
+    mainDisplay.textContent = dispVal;
+    firstNum = dispVal
+}
