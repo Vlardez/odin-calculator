@@ -46,12 +46,13 @@ zeroBtn.addEventListener('click', e => {
 opBtns.forEach(opBtn => {
     opBtn.addEventListener('click', e => {
             if (!opStates.queue) {
+                subDisplay.textContent += (dispVal + " " + e.currentTarget.value);
                 firstNum = dispVal;
-                dispVal = null;
                 mainDisplay.textContent = "";
                 opStates.queue = true;
                 opStates.op = e.currentTarget.value;
             } else {
+                subDisplay.textContent += (" " + dispVal + " " + e.currentTarget.value);
                 nextNum = dispVal;
                 dispVal = operate(opStates.op,firstNum,nextNum);
                 mainDisplay.textContent = dispVal;
