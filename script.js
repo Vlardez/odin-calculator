@@ -13,7 +13,8 @@ let zeroBtn = document.querySelector('#btn0');
 const opStates = {
     queue: false,
     op: "",
-    doubleEqual: false
+    clrdisp: false,
+    clrsub: false
 };
 
 //adding onclicks to various buttons
@@ -25,15 +26,14 @@ clearBtn.addEventListener('click', e => {
 })
 numBtns.forEach(numBtn => {
     numBtn.addEventListener('click', e => {
-        if (mainDisplay.textContent === "0") {
+        if (mainDisplay.textContent === "0" || opStates.clrdisp) {
             mainDisplay.textContent = "";
-            disp(e.currentTarget.value);
-        } else {
-            disp(e.currentTarget.value);
+            clrdisp = false;
         }
+        disp(e.currentTarget.value);
     })
 })
-deciBtn.addEventListener('click',e => {
+deciBtn.addEventListener('click', e => {
     if (mainDisplay.textContent !== "" && mainDisplay.textContent.search(/\./) === -1) {
         disp(e.currentTarget.value);
     }
@@ -43,30 +43,34 @@ zeroBtn.addEventListener('click', e => {
         disp(e.currentTarget.value);
     }
 })
+// finish figuring out the clear disp when doing new operation
 opBtns.forEach(opBtn => {
     opBtn.addEventListener('click', e => {
-            if (!opStates.queue) {
-                subDisplay.textContent += (dispVal + " " + e.currentTarget.value);
-                firstNum = dispVal;
-                mainDisplay.textContent = "";
-                opStates.queue = true;
-                opStates.op = e.currentTarget.value;
-            } else {
-                subDisplay.textContent += (" " + dispVal + " " + e.currentTarget.value);
-                nextNum = dispVal;
-                dispVal = operate(opStates.op,firstNum,nextNum);
-                mainDisplay.textContent = dispVal;
-                firstNum = dispVal;
-            }
+        if (opStates.clrsub) {
+            opStates.clrsub = false;
+            subDisplay.textContent = "";
+        }
+        if (!opStates.queue) {
+            subDisplay.textContent += (dispVal + " " + e.currentTarget.value);
+            firstNum = dispVal;
+            mainDisplay.textContent = "";
+            opStates.queue = true;
+            opStates.op = e.currentTarget.value;
+        } else {
+            subDisplay.textContent += (" " + dispVal + " " + e.currentTarget.value);
+            calc();
+            opStates.clrdisp = true;
+            opStates.op = e.currentTarget.value;
+        }
     })
 })
+// equals button messes up clear disp for some reason. 
 eqBtn.addEventListener('click', e => {
     if (opStates.queue) {
-        nextNum = dispVal;
-        dispVal = operate(opStates.op,firstNum,nextNum);
-        mainDisplay.textContent = dispVal;
-        firstNum = dispVal
+        subDisplay.textContent += (" " + dispVal);
+        calc();
         clrQueue();
+        opStates.clrsub = true;
     }
 })
 
@@ -90,17 +94,24 @@ function operate(op,a,b) {
             return add(a,b);
         case '-':
             return subtract(a,b);
-        case '*':
-            return multi(a,b);
-        case '/':
-            return divide(a,b);
-    }
-}
-function disp(num) {
-    mainDisplay.textContent += num;
-    dispVal = parseFloat(mainDisplay.textContent);
-}
-function clrQueue() {
-    opStates.queue = false;
-    opStates.op = "";
-}
+            case '*':
+                return multi(a,b);
+                case '/':
+                    return divide(a,b);
+                }
+            }
+            function disp(num) {
+                mainDisplay.textContent += num;
+                dispVal = parseFloat(mainDisplay.textContent);
+            }
+            function clrQueue() {
+                opStates.queue = false;
+                opStates.op = "";
+            }
+            
+            function calc() {
+                nextNum = dispVal;
+                dispVal = operate(opStates.op,firstNum,nextNum);
+                mainDisplay.textContent = dispVal;
+                firstNum = dispVal
+            }
