@@ -55,8 +55,14 @@ body {
 }
 #btn0 {
   grid-area: 6/1/6/3;
+  background-color: chocolate;
 }
-
+#decibtn, .numbtn {
+  background-color: chocolate;
+}
+#equalbtn, #percbtn, #negbtn, .opbtn, #clearbtn {
+  background-color: lightskyblue;
+}
 button {
   text-align: center;
   font-weight: bolder;
@@ -64,7 +70,6 @@ button {
   border: 2px solid blue;
   border-radius: 2px;
   box-shadow: 1px;
-  background-color: lightskyblue;
 }
 
 button:hover {

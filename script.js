@@ -18,7 +18,7 @@ const opStates = {
     clrdisp: false,
     clrsub: false
 };
-
+//possibly refactor the onclicks into named functions and then use that to add keyboard support
 //adding onclicks to various buttons
 clearBtn.addEventListener('click', e => {
     mainDisplay.textContent = "";
@@ -83,7 +83,7 @@ eqBtn.addEventListener('click', e => {
 })
 
 
-//operator functions, display functions, etc
+//operator functions
 function add(a,b) {
     return a+b;
 }
@@ -102,12 +102,14 @@ function operate(op,a,b) {
             return add(a,b);
         case '-':
             return subtract(a,b);
-            case '*':
-                return multi(a,b);
-                case '/':
-                    return divide(a,b);
-                }
-            }
+        case '*':
+            return multi(a,b);
+        case '/':
+            return divide(a,b);
+    }
+}
+
+//utility functions used commonly above
 function disp(num) {
     mainDisplay.textContent += num;
     dispVal = parseFloat(mainDisplay.textContent);
