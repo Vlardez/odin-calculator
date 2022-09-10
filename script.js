@@ -18,14 +18,32 @@ const opStates = {
     clrdisp: false,
     clrsub: false
 };
-//possibly refactor the onclicks into named functions and then use that to add keyboard support
-//adding onclicks to various buttons
-clearBtn.addEventListener('click', e => {
-    mainDisplay.textContent = "";
-    subDisplay.textContent = "";
-    dispVal = null;
-    clrQueue();
+
+//attempting to add keyboard functions
+document.addEventListener('keydown', e => {
+    console.log(e.key);
+    switch (e.key) {
+        case 'Delete':
+            clear();
+            break;
+        case '=':
+            equals();
+            break;
+        case '+':
+            
+    }
+    if (e.key >= 0 && e.key <= 9) {
+        if (mainDisplay.textContent === "0" || opStates.clrdisp) {
+            mainDisplay.textContent = "";
+            opStates.clrdisp = false;
+        }
+        disp(e.key);
+    }
 })
+
+//adding onclicks to various buttons
+clearBtn.addEventListener('click', clear)
+
 negBtn.addEventListener('click', e => {
     dispVal = -dispVal;
     mainDisplay.textContent = dispVal;
@@ -35,13 +53,7 @@ percBtn.addEventListener('click', e => {
     mainDisplay.textContent = dispVal;
 })
 numBtns.forEach(numBtn => {
-    numBtn.addEventListener('click', e => {
-        if (mainDisplay.textContent === "0" || opStates.clrdisp) {
-            mainDisplay.textContent = "";
-            clrdisp = false;
-        }
-        disp(e.currentTarget.value);
-    })
+    numBtn.addEventListener('click', dispNum)
 })
 deciBtn.addEventListener('click', e => {
     if (mainDisplay.textContent !== "" && mainDisplay.textContent.search(/\./) === -1) {
@@ -73,15 +85,33 @@ opBtns.forEach(opBtn => {
         }
     })
 })
-eqBtn.addEventListener('click', e => {
+eqBtn.addEventListener('click', equals)
+
+//functions refactored here to implement keyboard functionality
+function dispNum(e) {
+    if (mainDisplay.textContent === "0" || opStates.clrdisp) {
+        mainDisplay.textContent = "";
+        opStates.clrdisp = false;
+    }
+    disp(e.currentTarget.value);
+}
+
+function equals() {
     if (opStates.queue) {
+        console.log('equals ran')
         subDisplay.textContent += (" " + dispVal);
         calc();
         clrQueue();
         opStates.clrsub = true;
     }
-})
+}
 
+function clear() {
+    mainDisplay.textContent = "";
+    subDisplay.textContent = "";
+    dispVal = null;
+    clrQueue();
+}
 
 //operator functions
 function add(a,b) {
