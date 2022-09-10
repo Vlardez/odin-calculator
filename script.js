@@ -12,6 +12,8 @@ let eqBtn = document.querySelector('#equalbtn');
 let zeroBtn = document.querySelector('#btn0');
 let negBtn = document.querySelector('#negbtn');
 let percBtn = document.querySelector('#percbtn');
+let allBtns = document.querySelectorAll('button');
+
 const opStates = {
     queue: false,
     op: "",
@@ -21,6 +23,11 @@ const opStates = {
 
 //attempting to add keyboard functions
 document.addEventListener('keydown', e => {
+    let allBtns = document.querySelectorAll('button');
+    allBtns.forEach(btn => {
+        btn.style.backgroundColor = btn.value === e.key ? 'brown' : null;
+    })
+    clearBtn.style.backgroundColor = e.key === 'Delete' ? 'brown' : null;
     switch (e.key) {
         case 'Delete':
             clear();
@@ -60,7 +67,18 @@ document.addEventListener('keydown', e => {
     if (e.key >= 1 && e.key <= 9) {
         dispNum(e);
     }
-})
+});
+
+document.addEventListener('keyup', e => {
+    allBtns.forEach(btn => {
+        if (btn.classList.contains('opbtn') || btn.id === 'equalbtn' || btn.id === 'percbtn' || btn.id === 'clearbtn') {
+            btn.style.backgroundColor = btn.value === e.key ? 'lightskyblue' : null;
+            btn.style.backgroundColor = e.key === 'Delete' ? 'lightskyblue' : null;
+        } else if (btn.classList.contains('numbtn') || btn.id === 'btn0' || btn.id === 'decibtn') {
+            btn.style.backgroundColor = btn.value === e.key ? 'chocolate' : null;
+        }
+    })
+});
 
 //adding onclicks to various buttons
 clearBtn.addEventListener('click', clear);
@@ -82,8 +100,9 @@ zeroBtn.addEventListener('click', dispZero);
 
 opBtns.forEach(opBtn => {
     opBtn.addEventListener('click', performOp)
-})
-eqBtn.addEventListener('click', equals)
+});
+
+eqBtn.addEventListener('click', equals);
 
 
 //functions refactored here to implement keyboard functionality
@@ -131,6 +150,9 @@ function equals() {
 
 function performOp(e) {
     let val = e.type === 'click' ? e.currentTarget.value : e.key;
+    if (!(typeof dispVal === 'number')) {
+        return;
+    }
     if (opStates.clrsub) {
         opStates.clrsub = false;
         subDisplay.textContent = "";
