@@ -26,10 +26,13 @@ h2 {
 .container {
   min-height: 80vh;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
-
+#subtext {
+  max-width: 70vh;
+}
 .calculator {
   height: 620px;
   width: 440px;
