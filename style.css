@@ -7,12 +7,22 @@ body {
 
 .header {
   display: flex;
+  flex-direction: column;
   min-height: 5vh;
-  justify-content: center;
+  align-items: center;
+  justify-content: flex-start;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 2em;
 }
 
+h1 {
+  margin-bottom: 0;
+}
+
+h2 {
+  margin-top: 0;
+  font-size: 0.5em;
+}
 .container {
   min-height: 80vh;
   display: flex;
@@ -72,10 +82,10 @@ button {
   box-shadow: 1px;
 }
 
-button:hover {
+button:hover, #equalbtn:hover, #percbtn:hover, #negbtn:hover, #clearbtn:hover, #btn0:hover, #decibtn:hover {
   background-color: green;
 }
 
-button:active {
+button:active, #equalbtn:active, #percbtn:active, #negbtn:active, #clearbtn:active, #btn0:active, #decibtn:active {
   background-color: brown;
 }
