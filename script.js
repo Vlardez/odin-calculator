@@ -18,12 +18,12 @@ const opStates = {
     queue: false,
     op: "",
     clrdisp: false,
-    clrsub: false
+    clrsub: false,
+    disableAll: false
 };
 
 //attempting to add keyboard functions
 document.addEventListener('keydown', e => {
-    let allBtns = document.querySelectorAll('button');
     allBtns.forEach(btn => {
         btn.style.backgroundColor = btn.value === e.key ? 'brown' : null;
     })
@@ -84,8 +84,10 @@ document.addEventListener('keyup', e => {
 clearBtn.addEventListener('click', clear);
 
 negBtn.addEventListener('click', e => {
-    dispVal = -dispVal;
-    mainDisplay.textContent = dispVal;
+    if (!opStates.disableAll) {
+        dispVal = -dispVal;
+        mainDisplay.textContent = dispVal;
+    }
 });
 
 percBtn.addEventListener('click', percVal);
@@ -135,11 +137,14 @@ function dispDeci(e) {
 }
 
 function percVal() {
-    dispVal = dispVal / 100;
-    mainDisplay.textContent = dispVal;
+    if (!opStates.disableAll) {
+        dispVal = dispVal / 100;
+        mainDisplay.textContent = dispVal;
+    }
 }
 
 function equals() {
+    if (checkDiv0() === 1) return;
     if (opStates.queue) {
         subDisplay.textContent += (" " + dispVal);
         calc();
@@ -149,6 +154,7 @@ function equals() {
 }
 
 function performOp(e) {
+    if (opStates.disableAll) return;
     let val = e.type === 'click' ? e.currentTarget.value : e.key;
     if (!(typeof dispVal === 'number')) {
         return;
@@ -157,6 +163,7 @@ function performOp(e) {
         opStates.clrsub = false;
         subDisplay.textContent = "";
     }
+    if (checkDiv0() === 1) return; 
     if (!opStates.queue) {
         subDisplay.textContent += (dispVal + " " + val);
         firstNum = dispVal;
@@ -176,6 +183,7 @@ function clear() {
     subDisplay.textContent = "";
     dispVal = null;
     clrQueue();
+    if (opStates.disableAll) opStates.disableAll = false;
 }
 
 //operator functions
@@ -206,8 +214,10 @@ function operate(op,a,b) {
 
 //utility functions used commonly above
 function disp(num) {
-    mainDisplay.textContent += num;
-    dispVal = parseFloat(mainDisplay.textContent);
+    if (!opStates.disableAll) {
+        mainDisplay.textContent += num;
+        dispVal = parseFloat(mainDisplay.textContent);
+    }
 }
 
 function clrQueue() {
@@ -216,8 +226,26 @@ function clrQueue() {
 }
 
 function calc() {
-    nextNum = dispVal;
-    dispVal = operate(opStates.op,firstNum,nextNum);
-    mainDisplay.textContent = dispVal;
-    firstNum = dispVal
+    if (!opStates.disableAll) {
+        nextNum = dispVal;
+        dispVal = operate(opStates.op,firstNum,nextNum);
+        mainDisplay.textContent = dispVal;
+        firstNum = dispVal
+    }
+}
+
+function checkDiv0() {
+    if (opStates.queue && opStates.op === '/' && dispVal === 0) {
+        subDisplay.textContent = "naughty naughty!";
+        mainDisplay.textContent = "You think you're slick, eh? ;) I don't think so!"
+        clrQueue();
+        nextNum = null;
+        firstNum = null;
+        dispVal = null;
+        opStates.clrsub = true;
+        opStates.queue = false;
+        opStates.disableAll = true;
+        return 1;
+    }
+    else return 0;
 }
